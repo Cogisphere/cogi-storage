@@ -19,6 +19,11 @@ export default class ModelsRepository {
     get pathname() : string { return this._pathname; }
 
     /**
+     *  Get the models inside the repository.
+     */
+    get models() : Model[] { return [ ...this._models ]; };
+
+    /**
      *  Construct repository data.
      *  @throw Error    When the repository can't fetch data.
      */
@@ -26,7 +31,7 @@ export default class ModelsRepository {
 
         this._pathname = pathname;
 
-        this.pull();
+        this.checkFile();
     }
 
     /**
@@ -34,17 +39,55 @@ export default class ModelsRepository {
      * 
      * @throw Error     When the repository can't fetch data.
      */
-    pull() {
+    async pull() : Promise<Model[]> {
 
-        if (!fs.existsSync(this._pathname)) throw Error('Repository file is missing');
+        this.checkFile();
 
+        return new Promise((resolve, reject) => {
 
+            fs.readFile(this._pathname, 'utf8', (err, data) => {
+
+                const parsed = JSON.parse(data);
+
+                // @todo check if JSON is correct or there was a JSON parse error
+    
+                this._models = parsed.models;
+
+                resolve(this._models);
+            });
+        });
     }
 
     /**
      *  Flush current state of the repository to disk.
      */
-    flush() {
+    async flush() : Promise<void> {
 
+        return new Promise((resolve, reject) => {
+
+            fs.writeFile(this._pathname, this.format(), (err) => {
+
+                // @todo handle write errors
+
+                resolve(void 0);
+            });
+        });
+    }
+
+    /**
+     *  Format the repository for writing (or transfer)
+     */
+    private format() : string {
+        return JSON.stringify({
+            models: this._models
+        });
+    };
+
+    /**
+     *  Check if file already exists.
+     */
+    private checkFile() {
+
+        if (!fs.existsSync(this._pathname)) throw Error('Repository file is missing');
     }
 };

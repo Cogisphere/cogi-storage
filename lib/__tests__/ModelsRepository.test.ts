@@ -18,8 +18,12 @@ describe('ModelsRepository', () => {
     });
 
     describe('.pull()', () => {
-        it('should pull repository from disk', () => {
+        it('should pull repository from disk', async () => {
             const repository = new ModelsRepository(__dirname+"/fixtures/repository.json");
+
+            await repository.pull();
+
+            expect(repository.models).toHaveLength(1);
         });
     });
 
