@@ -1,0 +1,10 @@
+{
+    "extends": "@tsconfig/node14/tsconfig.json",
+    "compilerOptions": {
+      "preserveConstEnums": true,
+      "outDir": "./build",
+      "declaration": true,
+    },
+    "include": ["./cogi-storage.ts", "./lib/**/*.ts"],
+    "exclude": ["node_modules", "**/*.spec.ts", "**/*.test.ts"]
+  }

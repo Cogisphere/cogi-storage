@@ -1,0 +1,11 @@
+{
+    "models": [
+        {
+            "id": "test-1",
+            "name": "Test model 1",
+            "state": "unknown",
+            "notes": "",
+            "tags": "test"
+        }
+    ]
+}
